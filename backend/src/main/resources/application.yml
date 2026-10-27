@@ -1,0 +1,66 @@
+server:
+  port: 8080
+  error:
+    include-message: never
+    include-stacktrace: never
+
+spring:
+  application:
+    name: procureflow
+  datasource:
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/procureflow}
+    username: ${DB_USERNAME:procureflow}
+    password: ${DB_PASSWORD:procureflow}
+  jpa:
+    open-in-view: false
+    hibernate:
+      # "update" keeps the demo zero-config. For production use "validate" and a migration tool (Flyway/Liquibase).
+      ddl-auto: ${DDL_AUTO:update}
+    properties:
+      hibernate:
+        default_batch_fetch_size: 50
+        jdbc:
+          time_zone: UTC
+  jackson:
+    serialization:
+      write-dates-as-timestamps: false
+    time-zone: UTC
+
+app:
+  jwt:
+    # Must be at least 32 characters. Override with the JWT_SECRET environment variable. NEVER commit a real secret.
+    secret: ${JWT_SECRET:dev-only-secret-change-me-0123456789-abcdefghijklmnopqrstuvwxyz}
+    expiration-minutes: ${JWT_EXPIRATION_MINUTES:480}
+  cors:
+    allowed-origins: ${CORS_ALLOWED_ORIGINS:http://localhost:5173,http://localhost:3000}
+  seed:
+    # Creates demo users, categories and suppliers on an empty database.
+    enabled: ${SEED_ENABLED:true}
+    # Also creates a few sample requests / quotations / purchase orders so every page has data.
+    sample-data: ${SEED_SAMPLE_DATA:true}
+    # Password for ALL demo accounts. Demo use only.
+    password: ${SEED_PASSWORD:Password@123}
+  # There is no mail server in this project. When true, the forgot-password endpoint returns the reset token
+  # in its response (and logs it) so the flow can be demonstrated. Set to false in any real deployment.
+  dev-expose-reset-token: ${EXPOSE_RESET_TOKEN:true}
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+  api-docs:
+    path: /v3/api-docs
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+  endpoint:
+    health:
+      probes:
+        enabled: true
+
+logging:
+  level:
+    root: INFO
+    com.procureflow: INFO

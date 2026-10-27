@@ -1,0 +1,12 @@
+# Activate with: SPRING_PROFILES_ACTIVE=h2
+# Runs the whole backend against an in-memory H2 database (PostgreSQL compatibility mode).
+# Data is lost when the application stops. Intended for quick demos and for the automated tests.
+spring:
+  datasource:
+    url: jdbc:h2:mem:procureflow;MODE=PostgreSQL;DB_CLOSE_DELAY=-1;DATABASE_TO_LOWER=TRUE;DEFAULT_NULL_ORDERING=HIGH
+    username: sa
+    password:
+    driver-class-name: org.h2.Driver
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
